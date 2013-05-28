@@ -18,6 +18,9 @@
     "type": "git",
     "url": "https://github.com/lloydzhou/mapred.io"
   },
+  "dependencies": {
+    "socket.io": "latest"
+  },
   "readmeFilename": "README",
   "_id": "mapred@0.1.0"
 }
