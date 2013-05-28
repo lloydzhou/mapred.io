@@ -1,0 +1,23 @@
+{
+  "name": "mapred.io",
+  "version": "0.1.0",
+  "description": "MapReduce implementation based on socket.io",
+  "main": "main.js",
+  "author": {
+    "name": "lloydzhou",
+    "email": "lloydzhou@qq.com"
+  },
+  "keywords": [
+    "mapreduce",
+    "cluster"
+  ],
+  "engines": {
+    "node": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lloydzhou/mapred.io"
+  },
+  "readmeFilename": "README",
+  "_id": "mapred@0.1.0"
+}
