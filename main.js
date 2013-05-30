@@ -1,16 +1,12 @@
 /**
  * MapReduce implementation based on socket.io
  */
-var EventEmitter = process.EventEmitter
-
-var defaultError = function(){}
 
 /**
  * Export the constructor.
  */
 
 exports = module.exports = Mapred;
-
 
 function Mapred (io) {
   this.io = io;
@@ -40,6 +36,7 @@ function Mapred (io) {
 			// if all map tasks are complated then merge all the results and start to run reduce tasks.
 			var job = jobs[data.jobId];
 			job.complateMapTask(data, function(task){
+				task.stat = 'running';
 				socket.emit('map', task);
 			}, function(tasks){
 				var clients = io.sockets.clients(), i = 0;
@@ -57,7 +54,7 @@ function Mapred (io) {
 			// 
 			var job = jobs[data.jobId];
 			job.complateReduceTask(data, function(task){
-				if ('array' === typeof task.group)
+				task.stat = 'running';
 				socket.emit('reduce', task);
 			}, function(results){
 				console.log(results)
@@ -66,27 +63,6 @@ function Mapred (io) {
 		});
 		socket.on('error', function(data){
 			console.log(data)
-			//console.log(jobs[data.jobId].mapTasks[data.id]);
-			for(var id in jobs[data.jobId].reduceTasks)
-				console.log(jobs[data.jobId].reduceTasks[id].length ? 'Length: ' + jobs[data.jobId].reduceTasks[id].length : jobs[data.jobId].reduceTasks[id]);
-			/*
-			if (data.map)
-			{
-				var task = jobs[data.jobId].mapTasks[data.id];
-				socket.emit('map', task);
-			}else{
-				var task = jobs[data.jobId].reduceTasks[data.id];
-				socket.emit('reduce', task);
-			}
-			console.log(data);
-/*			var job = jobs[data.jobId];
-			job.complateReduceTask(data, function(task){
-				socket.emit('reduce', task);
-			}, function(results){
-				console.log(results)
-				io.sockets.socket(job.clientId).emit('result', results);
-			});
-			*/
 		});
 	});
 };
@@ -106,9 +82,9 @@ function JobConf(io, conf, clientId)
 	this.conf = conf;
 	this.clientId = clientId;
 	this.id = io.sockets.manager.generateId();
-	this.mapTaskNum = conf.mapTaskNum || clients.length + 1 || 1;
+	this.mapTaskNum = conf.mapTaskNum || clients.length || 1;
 	this.mapTasks = {};
-	this.reduceTaskNum = conf.reduceTaskNum || clients.length + 1 || 1;
+	this.reduceTaskNum = conf.reduceTaskNum || clients.length || 1;
 	this.reduceTasks = {};
 }
 JobConf.prototype.initMapTask = function(callback)
@@ -182,4 +158,3 @@ JobConf.prototype.complateReduceTask = function(data, taskCallback, callback)
 			callback(groups)
 		});
 }
-
