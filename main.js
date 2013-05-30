@@ -57,7 +57,7 @@ function Mapred (io) {
 				task.stat = 'running';
 				socket.emit('reduce', task);
 			}, function(results){
-				console.log(results)
+				console.log('job: ' + results.jobconf.jobid + ', using: ' + results.jobconf.time.using + ' ms.')
 				io.sockets.socket(job.clientId).emit('result', results);
 			});
 		});
@@ -78,6 +78,7 @@ function Mapred (io) {
 function JobConf(io, conf, clientId)
 {
 	var clients = io.sockets.clients();
+	this.time = {start: new Date()};
 	this.io = io;
 	this.conf = conf;
 	this.clientId = clientId;
@@ -95,6 +96,7 @@ JobConf.prototype.initMapTask = function(callback)
 		var id = this.io.sockets.manager.generateId();
 		this.mapTasks[id] = {jobId: this.id, id: id, stat: 'create', map: this.conf.map, pieces: pieces.splice(0, len) };
 	}
+	this.time['initMapTask'] = new Date();
 	callback && callback(this.mapTasks);
 }
 JobConf.prototype.complateMapTask = function(data, taskCallback, callback)
@@ -137,6 +139,7 @@ JobConf.prototype.initReduceTask = function(callback)
 		{
 			job.reduceTasks[ids[++i % num]].groups[key] = groups[key];
 		}
+		job.time['initReduceTask'] = new Date();
 		callback && callback(job.reduceTasks);
 	})
 }
@@ -155,6 +158,8 @@ JobConf.prototype.complateReduceTask = function(data, taskCallback, callback)
 	}
 	if (count ===  this.reduceTaskNum) 
 		this._merge(false, function(job, groups){
-			callback(groups)
+			job.time['end'] = new Date();
+			job.time['using'] = job.time['end'] - job.time['start'];
+			callback({jobconf:{time: job.time, jobid: job.id, mapTaskNum: job.mapTaskNum, reduceTaskNum: job.reduceTaskNum}, results:groups})
 		});
 }
