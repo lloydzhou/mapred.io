@@ -2,7 +2,7 @@
   "name": "mapred.io",
   "version": "0.1.0",
   "description": "MapReduce implementation based on socket.io",
-  "main": "main.js",
+  "main": "mapred.io.js",
   "author": {
     "name": "lloydzhou",
     "email": "lloydzhou@qq.com"
@@ -22,5 +22,5 @@
     "socket.io": "latest"
   },
   "readmeFilename": "README",
-  "_id": "mapred@0.1.0"
+  "_id": "mapred.io@0.1.0"
 }
