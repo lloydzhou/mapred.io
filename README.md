@@ -1,7 +1,7 @@
 mapred.io
 =========
 
-mapreduce based on socket.io
+mapreduce based on socket.io  
 You can use this module, use the browser to easily build mapreduce programming model based on parallel computing platform. On this platform, you can submit the page using javascript mapreduce tasks.
 
 
@@ -80,6 +80,6 @@ socket.emit('job', { map: (function(key, value){
 ## To do
 1. Performance Test
 2. Client program (the standalone client not on the browser).
-3. stored the datas (the server do not have enough memory to handle large data, Need a fast persistent storage framework)
+3. Stored the datas (the server do not have enough memory to handle large data, Need a fast persistent storage framework)
 
 
