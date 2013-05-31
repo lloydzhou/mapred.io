@@ -1,26 +1,10 @@
 {
-  "name": "mapred.io",
-  "version": "0.1.0",
-  "description": "MapReduce implementation based on socket.io",
-  "main": "mapred.io.js",
-  "author": {
-    "name": "lloydzhou",
-    "email": "lloydzhou@qq.com"
-  },
-  "keywords": [
-    "mapreduce",
-    "cluster"
-  ],
-  "engines": {
-    "node": "*"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/lloydzhou/mapred.io"
-  },
-  "dependencies": {
-    "socket.io": "latest"
-  },
-  "readmeFilename": "README",
-  "_id": "mapred.io@0.1.0"
+    "name": "calc_qgw_datas",
+    "version": "0.0.1",
+    "description": "calc qgw datas",
+    "dependencies": {
+        "socket.io": "latest",
+		"mapred": "latest"
+    },
+    "author": "dev"
 }
