@@ -10,11 +10,11 @@ You can use this module, use the browser to easily build mapreduce programming m
 ```js
 var app = require('http').createServer(handler)
   , fs = require('fs')
-  , io = require('socket.io').listen(app, { log: false })
-  , parse = require('url').parse
-  , mio = require('mapred.io')(io);
+  , io = require('mapred.io').listen(app)
+  , parse = require('url').parse;
+  
   app.listen(80);
-
+  io.set('log level', 2);
 
 function handler (req, res) {
   var info = parse(req.url, true);
@@ -28,12 +28,15 @@ function handler (req, res) {
 	res.writeHead(200);
 	res.end(data);
   }
-  if (info.pathname === '/jquery.min.js')
+  if (info.pathname.match(/\/public/))
 	fs.readFile(__dirname + info.pathname, hander )
-  else if (info.pathname === '/job.html')
-	fs.readFile(__dirname + '/job.html', hander )
-  else fs.readFile(__dirname + '/test.html', hander )
+  else if (info.pathname.match(/\/client/))
+	fs.readFile(__dirname + '/client.html', hander )
+  else fs.readFile(__dirname + '/job.html', hander )
 }
+
+
+
 ```
 
 ## Client
