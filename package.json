@@ -1,6 +1,6 @@
 {
   "name": "mapred.io",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "MapReduce implementation based on socket.io",
   "main": "mapred.io.js",
   "author": {
