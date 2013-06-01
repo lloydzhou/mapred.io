@@ -60,8 +60,8 @@ var input = [
 	['cacho 3', 'otro trozo para ser procesado otro otro otro trozo'],
 	['cuarta frase', 'primer trozo de informacion para procesado primer trozo'],
 	['frase 5', 'segundo trozo de informacion trozo de']
-], inputs = [], i;
-for ( i = 0 ; i < 20000 ; i++ ) inputs = inputs.concat(input);
+], inputs = input, i;
+//for ( i = 0 ; i < 20000 ; i++ ) inputs = inputs.concat(input);
 
 socket.emit('job', { map: (function(key, value){
     var list = [], aux = {};
