@@ -86,4 +86,5 @@ socket.emit('job', { map: (function(key, value){
 2. Client program (the standalone client not on the browser).
 3. Stored the datas (the server do not have enough memory to handle large data, Need a fast persistent storage framework)
 
-
+![screenshot](https://f.cloud.github.com/assets/1826685/594156/1a112198-ca5d-11e2-87cd-cc11069e530f.png)
+update the screeshot
