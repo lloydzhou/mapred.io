@@ -55,13 +55,13 @@ var MapredClient = new MapredClient(socket);
 <script type="text/javascript" >
 
 var input = [
-        ['frase primera', 'primer trozo de informacion para procesado primer trozo'],
-        ['segunda frase', 'segundo trozo de informacion trozo de'],
-        ['cacho 3', 'otro trozo para ser procesado otro otro otro trozo'],
-        ['cuarta frase', 'primer trozo de informacion para procesado primer trozo'],
-        ['frase 5', 'segundo trozo de informacion trozo de']
-    ], inputs = [], i;
-for ( i = 0;i < 20000 ; i++ ) inputs = inputs.concat(input);
+	['frase primera', 'primer trozo de informacion para procesado primer trozo'],
+	['segunda frase', 'segundo trozo de informacion trozo de'],
+	['cacho 3', 'otro trozo para ser procesado otro otro otro trozo'],
+	['cuarta frase', 'primer trozo de informacion para procesado primer trozo'],
+	['frase 5', 'segundo trozo de informacion trozo de']
+], inputs = [], i;
+for ( i = 0 ; i < 20000 ; i++ ) inputs = inputs.concat(input);
 
 socket.emit('job', { map: (function(key, value){
     var list = [], aux = {};
