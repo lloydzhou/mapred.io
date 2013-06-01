@@ -61,7 +61,7 @@ var input = [
 	['cuarta frase', 'primer trozo de informacion para procesado primer trozo'],
 	['frase 5', 'segundo trozo de informacion trozo de']
 ], inputs = input, i;
-//for ( i = 0 ; i < 20000 ; i++ ) inputs = inputs.concat(input);
+
 
 socket.emit('job', { map: (function(key, value){
     var list = [], aux = {};
