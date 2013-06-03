@@ -84,7 +84,8 @@ socket.emit('job', { map: (function(key, value){
 ## To do
 1. Performance Test
 2. Client program (the standalone client not on the browser).
-3. Stored the datas (the server do not have enough memory to handle large data, Need a fast persistent storage framework)
+3. Stored the datas (the server do not have enough memory to handle large data, Need a fast persistent storage framework. Just using the store of socket.io default is "MemoryStore", you can using "RedisStore")
 
+![screenshot](https://f.cloud.github.com/assets/1826685/597401/5c4b1576-cbf4-11e2-9dcf-18dbad84b402.png)
 ![screenshot](https://f.cloud.github.com/assets/1826685/594156/1a112198-ca5d-11e2-87cd-cc11069e530f.png)
 update the screeshot
