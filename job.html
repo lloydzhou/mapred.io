@@ -1,0 +1,129 @@
+<html>
+<head>
+<link type="text/css" rel="stylesheet" href="/public/css/layout-default-latest.css" />
+<script type="text/javascript" src="/public/js/jquery.min.js"></script>
+<script type="text/javascript" src="/public/js/jquery-ui.js"></script>
+<script type="text/javascript" src="/public/js/jquery.layout.js"></script>
+  <style>
+  #job-list .ui-selecting { background: #FECA40; }
+  #job-list .ui-selected { background: #F39814; color: white; }
+  #job-list { list-style-type: none; margin: 0; padding: 0; }
+  #job-list li { margin: 3px; padding: 1px; float: left; width: 330px; height: 30px; font-size: 1em; text-align: left; white-space:nowrap;}
+  </style>
+</head>
+<body>
+<div class="ui-layout-north">
+  <b>Control Panel</b>
+	<button id="add-client">Add a new Client</button>
+	<button id="close-clients">Close Clients</button>
+	<button id="submit-job">Submit Job</button>
+</div>
+
+<div class="ui-layout-west">
+<ul id="clients"><ul>
+</div>
+<div class="ui-layout-east">
+	<ol id="job-list"></ol>
+</div>
+
+<div class="ui-layout-center">
+	<div id="main">Job details</div>
+	
+</div>
+<div class="ui-layout-south">
+<div>Messages: <div>
+<div id="messages"></div>
+</div>
+
+<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+<script type="text/javascript" src="/socket.io/mapred.io.js"></script>
+<script type="text/javascript" >
+
+
+
+jQuery(document).ready(function () {
+	jQuery('body').layout({west__size: 300, east__size: 350, south__size: 300});
+})
+var socket = io.connect();
+jQuery(window).bind('beforeunload',function(){ 
+	socket.emit('disconnect', 'leave cluster.');
+}); 
+
+var job2html = function(job){
+	var html = '<h2>'+job.jobconf.jobid+'</h2>'
+		+ '<b>inputSize(' + job.jobconf.inputSize + ')</b>'
+		+ ' <b>mapTaskNum(' + job.jobconf.mapTaskNum + ')</b>'
+		+ ' <b>reduceTaskNum(' + job.jobconf.reduceTaskNum + ')</b>'
+		+'<h3>Time:</h3><ul><li>start: '
+		+ job.jobconf.time.start + '</li><li>initMapTask: '
+		+ job.jobconf.time.initMapTask + '</li><li>initReduceTask: '
+		+ job.jobconf.time.initReduceTask + '</li><li>end: '
+		+ job.jobconf.time.end + '</li><li>using: '
+		+ job.jobconf.time.using + ' ms</li></ul>'
+
+		+ '<h3>Results:</h3><ol>';
+		for(var key in job.results) html += '<li>' + key + ' ==> ' + job.results[key] + '</li>'
+	return html + '</ol>';
+}
+var MapredClient = new MapredClient(socket, {messageCallback: function(data){
+		jQuery('#messages').prepend('<p>'+ data+ '</p>');
+	}, log: function(data){
+		jQuery('#messages').prepend('<p>'+ data+ '</p>');
+	}, resultCallback: function(data){
+		jQuery('#messages').prepend('<p>'+ JSON.stringify(data)+ '</p>');
+		jQuery('#job-list').append(jQuery('<li>'+data.jobconf.jobid+'('+data.jobconf.time.using+'ms)</li>').data('job', data));
+		jQuery('#job-list').selectable({selected: function( event, ui ) {
+			//console.log(jQuery(ui.selected).data())
+			jQuery('#main').html(job2html(jQuery(ui.selected).data('job')))
+			
+		}});
+		//jQuery('#job-list').prepend('<li data="'+ JSON.stringify(data)+'">'+ +'</p>');
+	}
+});
+socket.on('join', function(data){
+	jQuery('#clients').append('<li id="' + data+ '">' + data+ '</li>');
+	jQuery('#messages').prepend('<p>'+ data + 'have been joined in this cluster.' + '</p>');
+})
+socket.on('leave', function(data){
+	jQuery('#' + data).remove();
+	jQuery('#messages').prepend('<p>'+ data + 'will leave this cluster.' + '</p>');
+})
+var child = [];
+$('#add-client').click(function(){
+	var l = child.length, top = 250 + l*10; left = 300 + l*10;
+	child.push(window.open('/client','','height=80,width=200,top='+top+',left='+left+',toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no'));
+});
+$('#close-clients').click(function(){ for (var i in child) child[i].close();})
+
+var input = [
+		['frase primera', 'primer trozo de informacion para procesado primer trozo'],
+		['segunda frase', 'segundo trozo de informacion trozo de'],
+		['cacho 3', 'otro trozo para ser procesado otro otro otro trozo'],
+		['cuarta frase', 'primer trozo de informacion para procesado primer trozo'],
+		['frase 5', 'segundo trozo de informacion trozo de']
+	], inputs = [], i;
+for (i = 0;i < 20000;i++) 
+	inputs = inputs.concat(input);
+
+$('#submit-job').click(function (){
+	socket.emit('job', { map: (function(key, value){
+		var list = [], aux = {};
+		value = value.split(' ');
+		value.forEach(function(w){
+			aux[w] = (aux[w] || 0) + 1;
+		});
+		for(var k in aux){
+			list.push([k, aux[k]]);
+		}
+		return list;
+	}).toString(), reduce: (function(key, values){
+		var sum = 0;
+		values.forEach(function(e){
+			sum += e;
+		});
+		return sum;
+	}).toString(), inputs:inputs});
+});
+</script>
+</body>
+</html>
