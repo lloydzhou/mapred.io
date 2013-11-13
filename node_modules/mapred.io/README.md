@@ -1,4 +1,4 @@
-mapred.io
+[mapred.io](http://lloydzhou.github.io/mapred.io/)
 =========
 
 mapreduce based on socket.io  
