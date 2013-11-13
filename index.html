@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Mapred.io : mapreduce based on socket.io" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Mapred.io</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/lloydzhou/mapred.io">View on GitHub</a>
+
+          <h1 id="project_title">Mapred.io</h1>
+          <h2 id="project_tagline">mapreduce based on socket.io</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/lloydzhou/mapred.io/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/lloydzhou/mapred.io/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="mapredio" class="anchor" href="#mapredio"><span class="octicon octicon-link"></span></a>mapred.io</h1>
+
+<p>mapreduce based on socket.io<br>
+You can use this module, use the browser to easily build mapreduce programming model based on parallel computing platform. On this platform, you can submit the page using javascript mapreduce tasks.</p>
+
+<h2>
+<a name="install" class="anchor" href="#install"><span class="octicon octicon-link"></span></a>install</h2>
+
+<div class="highlight highlight-js"><pre><span class="nx">npm</span> <span class="nx">install</span> <span class="nx">mapred</span><span class="p">.</span><span class="nx">io</span>
+</pre></div>
+
+<h2>
+<a name="server" class="anchor" href="#server"><span class="octicon octicon-link"></span></a>Server</h2>
+
+<div class="highlight highlight-js"><pre><span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'http'</span><span class="p">).</span><span class="nx">createServer</span><span class="p">(</span><span class="nx">handler</span><span class="p">)</span>
+  <span class="p">,</span> <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'fs'</span><span class="p">)</span>
+  <span class="p">,</span> <span class="nx">io</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'mapred.io'</span><span class="p">).</span><span class="nx">listen</span><span class="p">(</span><span class="nx">app</span><span class="p">)</span>
+  <span class="p">,</span> <span class="nx">parse</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'url'</span><span class="p">).</span><span class="nx">parse</span><span class="p">;</span>
+
+  <span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">80</span><span class="p">);</span>
+  <span class="nx">io</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'log level'</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+
+<span class="kd">function</span> <span class="nx">handler</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">info</span> <span class="o">=</span> <span class="nx">parse</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">url</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+
+  <span class="kd">var</span> <span class="nx">hander</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">res</span><span class="p">.</span><span class="nx">writeHead</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
+      <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="s1">'Error loading file'</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="nx">res</span><span class="p">.</span><span class="nx">writeHead</span><span class="p">(</span><span class="mi">200</span><span class="p">);</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">info</span><span class="p">.</span><span class="nx">pathname</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/\/public/</span><span class="p">))</span>
+    <span class="nx">fs</span><span class="p">.</span><span class="nx">readFile</span><span class="p">(</span><span class="nx">__dirname</span> <span class="o">+</span> <span class="nx">info</span><span class="p">.</span><span class="nx">pathname</span><span class="p">,</span> <span class="nx">hander</span> <span class="p">)</span>
+  <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">info</span><span class="p">.</span><span class="nx">pathname</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/\/client/</span><span class="p">))</span>
+    <span class="nx">fs</span><span class="p">.</span><span class="nx">readFile</span><span class="p">(</span><span class="nx">__dirname</span> <span class="o">+</span> <span class="s1">'/client.html'</span><span class="p">,</span> <span class="nx">hander</span> <span class="p">)</span>
+  <span class="k">else</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">readFile</span><span class="p">(</span><span class="nx">__dirname</span> <span class="o">+</span> <span class="s1">'/job.html'</span><span class="p">,</span> <span class="nx">hander</span> <span class="p">)</span>
+<span class="p">}</span>
+
+
+
+</pre></div>
+
+<h2>
+<a name="client" class="anchor" href="#client"><span class="octicon octicon-link"></span></a>Client</h2>
+
+<div class="highlight highlight-html"><pre><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">src=</span><span class="s">"/socket.io/socket.io.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">src=</span><span class="s">"/socket.io/mapred.io.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="nt">&gt;</span>
+<span class="kd">var</span> <span class="nx">socket</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">connect</span><span class="p">();</span>
+<span class="kd">var</span> <span class="nx">MapredClient</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MapredClient</span><span class="p">(</span><span class="nx">socket</span><span class="p">);</span>
+<span class="nt">&lt;/script&gt;</span>
+</pre></div>
+
+<h2>
+<a name="submit-job" class="anchor" href="#submit-job"><span class="octicon octicon-link"></span></a>Submit Job</h2>
+
+<div class="highlight highlight-html"><pre><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">src=</span><span class="s">"/socket.io/socket.io.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">src=</span><span class="s">"/socket.io/mapred.io.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="nt">&gt;</span>
+
+var input = [
+    ['frase primera', 'primer trozo de informacion para procesado primer trozo'],
+    ['segunda frase', 'segundo trozo de informacion trozo de'],
+    ['cacho 3', 'otro trozo para ser procesado otro otro otro trozo'],
+    ['cuarta frase', 'primer trozo de informacion para procesado primer trozo'],
+    ['frase 5', 'segundo trozo de informacion trozo de']
+], inputs = input, i;
+//for ( i = 0 ; i <span class="ni">&amp;lt;</span> 20000 ; i ++ ) inputs = inputs.concat(input);
+
+socket.emit('job', { map: (function(key, value){
+    var list = [], aux = {};
+        value = value.split(' ');
+        value.forEach(function(w){
+            aux[w] = (aux[w] || 0) + 1;
+        });
+        for(var k in aux){
+            list.push([k, aux[k]]);
+        }
+        return list;
+    }).toString(), reduce: (function(key, values){
+        var sum = 0;
+        values.forEach(function(e){
+            sum += e;
+        });
+        return sum;
+    }).toString(), inputs:inputs)
+</pre></div>
+
+<h2>
+<a name="to-do" class="anchor" href="#to-do"><span class="octicon octicon-link"></span></a>To do</h2>
+
+<ol>
+<li>Performance Test</li>
+<li>Client program (the standalone client not on the browser).</li>
+<li>Stored the datas (the server do not have enough memory to handle large data, Need a fast persistent storage framework. Just using the store of socket.io default is "MemoryStore", you can using "RedisStore")</li>
+</ol><p><img src="https://f.cloud.github.com/assets/1826685/597401/5c4b1576-cbf4-11e2-9dcf-18dbad84b402.png" alt="screenshot"><img src="https://f.cloud.github.com/assets/1826685/594156/1a112198-ca5d-11e2-87cd-cc11069e530f.png" alt="screenshot">
+update the screeshot</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Mapred.io maintained by <a href="https://github.com/lloydzhou">lloydzhou</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
