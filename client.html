@@ -7,8 +7,8 @@
 <script type="text/javascript" src="/socket.io/mapred.io.js"></script>
 <script type="text/javascript" >
 var socket = io.connect();
-var MapredClient = new MapredClient(socket);
-var gc = setInterval(function(){if (MapredClient.isFree()) MapredClient.socket.emit('task', {free: MapredClient.free});}, 200);
+var client = new MapredClient(socket);
+//var gc = setInterval(function(){if (client.isFree()) client.socket.emit('task', {free: client.free});}, 200);
 </script>
 </body>
 </html>

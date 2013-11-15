@@ -17,6 +17,7 @@
 	<button id="add-client">Add a new Client</button>
 	<button id="close-clients">Close Clients</button>
 	<button id="submit-job">Submit Job</button>
+	<button id="get-status">Get Status</button>
 </div>
 
 <div class="ui-layout-west">
@@ -65,9 +66,7 @@ var job2html = function(job){
 		for(var key in job.results) html += '<li>' + key + ' ==> ' + job.results[key] + '</li>'
 	return html + '</ol>';
 }
-var MapredClient = new MapredClient(socket, {messageCallback: function(data){
-		jQuery('#messages').prepend('<p>'+ data+ '</p>');
-	}, log: function(data){
+var client = new MapredClient(socket, {messageCallback: function(data){
 		jQuery('#messages').prepend('<p>'+ data+ '</p>');
 	}, resultCallback: function(data){
 		jQuery('#messages').prepend('<p>'+ JSON.stringify(data)+ '</p>');
@@ -78,16 +77,17 @@ var MapredClient = new MapredClient(socket, {messageCallback: function(data){
 			
 		}});
 		//jQuery('#job-list').prepend('<li data="'+ JSON.stringify(data)+'">'+ +'</p>');
+	}, joinCallback: function(data){
+		jQuery('#clients').append('<li id="' + data+ '">' + data+ '</li>');
+		jQuery('#messages').prepend('<p>'+ data + 'have been joined in this cluster.' + '</p>');
+	}, leaveCallback: function(data){
+		jQuery('#' + data).remove();
+		jQuery('#messages').prepend('<p>'+ data + 'will leave this cluster.' + '</p>');
+	}, submitCallback: function (data) {
+		jQuery('#messages').prepend('<p>JOB: '+ data+ ' has beed submit success.</p>');
 	}
 });
-socket.on('join', function(data){
-	jQuery('#clients').append('<li id="' + data+ '">' + data+ '</li>');
-	jQuery('#messages').prepend('<p>'+ data + 'have been joined in this cluster.' + '</p>');
-})
-socket.on('leave', function(data){
-	jQuery('#' + data).remove();
-	jQuery('#messages').prepend('<p>'+ data + 'will leave this cluster.' + '</p>');
-})
+
 var child = [];
 $('#add-client').click(function(){
 	var l = child.length, top = 250 + l*10; left = 300 + l*10;
@@ -106,7 +106,7 @@ for (i = 0;i < 20000;i++)
 	inputs = inputs.concat(input);
 
 $('#submit-job').click(function (){
-	socket.emit('job', { map: (function(key, value){
+	client.submit({ map: (function(key, value){
 		var list = [], aux = {};
 		value = value.split(' ');
 		value.forEach(function(w){
@@ -124,6 +124,8 @@ $('#submit-job').click(function (){
 		return sum;
 	}).toString(), inputs:inputs});
 });
+$('#get-status').click(function (){client.status()})
+
 </script>
 </body>
 </html>
