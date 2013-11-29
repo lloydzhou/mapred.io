@@ -84,6 +84,9 @@ socket.emit('job', { map: (function(key, value){
         return sum;
     }).toString(), inputs:inputs)
 ```
+## change log
+2013-11-29  update mapred.io-client.js can be using in browser and command line, add client.js can run as a node.
+
 ## To do
 1. Performance Test
 2. Client program (the standalone client not on the browser).
